@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Procesador de Imágenes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Procesador de imágenes para Canon Selphy"
+    />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        text-align: center;
+      }
+
+      h1,
+      h2 {
+        color: #333;
+      }
+
+      form {
+        background: #fff;
+        padding: 50px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      input[type="file"] {
+        padding: 10px;
+        width: 100%;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      button.hidden {
+        display: none;
+      }
+
+      .download-link {
+        margin-top: 20px;
+        display: none;
+        text-align: center;
+      }
+
+      .download-link a {
+        color: #4caf50;
+        text-decoration: none;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .download-link a:hover {
+        text-decoration: underline;
+      }
+
+      .download-link svg {
+        margin-left: 8px;
+        width: 24px;
+        height: 24px;
+        fill: #4caf50;
+        transform: rotate(180deg);
+      }
+
+      .download-link a:hover svg {
+        fill: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Procesar Imágenes</h1>
+      <h2>CANON SELPHY</h2>
+    </header>
+    <p>Selecciona una o varias imágenes para convertirlas</p>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input
+        type="file"
+        name="image"
+        id="fileInput"
+        multiple
+        accept="image/*"
+        required
+      />
+      <button type="submit" id="submitButton" class="hidden">
+        Subir y Procesar
+      </button>
+    </form>
+    <div class="download-link" id="downloadLink">
+      <a id="downloadAnchor" href="#" download>
+        Descargar imágenes procesadas
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path
+            d="M12 21c-.553 0-1-.447-1-1V6.414l-4.293 4.293c-.391.391-1.023.391-1.414 0-.391-.391-.391-1.023 0-1.414l6-6c.391-.391 1.023-.391 1.414 0l6 6c.391.391.391 1.023 0 1.414-.391.391-1.023.391-1.414 0L13 6.414V20c0 .553-.447 1-1 1z"
+          />
+        </svg>
+      </a>
+    </div>
+
+    <footer>
+      <p>
+        Desarrollado por
+        <a href="https://martinezsebastian.com" target="_blank"
+          >martinezsebastian.com</a
+        >
+      </p>
+    </footer>
+
+    <script>
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", function () {
+          const submitButton = document.getElementById("submitButton");
+          if (this.files.length > 0) {
+            submitButton.classList.remove("hidden");
+          } else {
+            submitButton.classList.add("hidden");
+          }
+        });
+
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const formData = new FormData(this);
+
+          try {
+            const response = await fetch("/convertAndModifyImage", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (response.ok) {
+              const blob = await response.blob();
+              const url = window.URL.createObjectURL(blob);
+              const downloadAnchor = document.getElementById("downloadAnchor");
+              downloadAnchor.href = url;
+              document.getElementById("downloadLink").style.display = "block";
+            } else {
+              console.error("Error en la respuesta de la API");
+            }
+          } catch (error) {
+            console.error("Error al procesar las imágenes", error);
+          }
+        });
+    </script>
+  </body>
+</html>
