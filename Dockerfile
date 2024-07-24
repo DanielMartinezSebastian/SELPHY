@@ -1,5 +1,5 @@
-# Utiliza una imagen base de Node.js
-FROM node:14
+# Utiliza una imagen minima de Node.js
+FROM node:14-alpine
 
 # Crea un directorio para la aplicación
 WORKDIR /usr/src/app
@@ -9,6 +9,9 @@ COPY package*.json ./
 
 # Instala las dependencias del proyecto
 RUN npm install
+
+# Instala PERL necesario para usar Exiftool
+RUN apk add perl
 
 # Copia el resto del código fuente del proyecto
 COPY . .
