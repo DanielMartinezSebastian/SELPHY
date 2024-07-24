@@ -30,13 +30,15 @@ Esta aplicación es un servidor web diseñado para procesar imágenes y hacerlas
 En el archivo `package.json`, se han definido los siguientes scripts:
 
 - `start`: Inicia el servidor de la aplicación.
+  
     ```sh
     npm start
-        ```
+    ```
 - `docker:build`: Construye la imagen de Docker de la aplicación.
+  
     ```sh
     npm run docker:build
-        ```
+    ```
 
 ## Requisitos
 
