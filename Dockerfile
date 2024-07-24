@@ -1,5 +1,9 @@
-# Utiliza una imagen minima de Node.js
-FROM node:14-alpine
+# Utiliza una imagen minima de Node.js en 32/64
+# FROM node:14-alpine
+
+# Utiliza una imagen minima de Node.js en arm para raspberry pi
+FROM arm32v7/node:14-alpine
+
 
 # Crea un directorio para la aplicación
 WORKDIR /usr/src/app
